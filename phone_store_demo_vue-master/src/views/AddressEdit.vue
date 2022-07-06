@@ -12,14 +12,21 @@
 <script>
     import AreaList from '../api/area';
     import { Toast } from 'vant';
+    import {getCookie} from "@/plugins/cookie";
     export default {
         name: "AddressEdit",
         created(){
-            let data = JSON.parse(this.$route.query.item)
+          var username=getCookie('username');
+          if(username==''||username=='undefind'){
+            this.$router.push({
+              path: '/login'
+            });
+          }else
+          {let data = JSON.parse(this.$route.query.item)
             this.addressInfo = data
             let index = data.address.indexOf('区')
             if(index < 0) index = data.address.indexOf('县')
-            this.addressInfo.addressDetail = data.address.substring(index+1)
+            this.addressInfo.addressDetail = data.address.substring(index+1)}
         },
         data() {
             return {

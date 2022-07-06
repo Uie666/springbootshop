@@ -13,6 +13,7 @@
 
 <script>
     import { Toast } from 'vant';
+    import {getCookie} from "@/plugins/cookie";
     export default {
         data() {
             return {
@@ -22,9 +23,15 @@
         },
         created(){
             const _this = this
-            axios.get('http://localhost:8181/address/list').then(function (resp) {
+          var username=getCookie('username');
+          if(username==''||username=='undefind'){
+            this.$router.push({
+              path: '/login'
+            });
+          }else
+          {axios.get('http://localhost:8181/address/list').then(function (resp) {
                 _this.list = resp.data.data
-            })
+            })}
         },
         methods: {
             onAdd() {

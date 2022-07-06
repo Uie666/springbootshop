@@ -48,7 +48,12 @@
         </div>
       </template>
     </van-sku>
-
+    <el-button
+        type="info"
+        round
+        style="background-color: #ddd; border: 1px solid #eee"
+        @click="logout"
+    >退出</el-button>
   </div>
 
 
@@ -61,6 +66,7 @@
     Swipe,
     SwipeItem
   } from 'vant';
+  import {delCookie, getCookie} from "@/plugins/cookie";
   export default {
     comments:{
       [PullRefresh.name]: PullRefresh,
@@ -78,14 +84,22 @@
     },
     created(){
       const _this = this
+        var username=getCookie('username');
+        console.log(username)
+        if(username==''||username=='undefind'){
+          this.$router.push({
+            path: '/login'
+          });
+        }else{
       axios.get('http://localhost:8181/phone/index').then(function (resp) {
         _this.phones = resp.data.data.phones
         _this.categories = resp.data.data.categories
-      })
+      })}
     },
     methods: {
       onClick(index) {
         const _this = this
+
         axios.get('http://localhost:8181/phone/findByCategoryType/'+this.categories[index].type).then(function (resp) {
           _this.phones = resp.data.data
         })
@@ -94,6 +108,7 @@
       buy(index){
         this.show = true
         const _this = this
+
         axios.get('http://localhost:8181/phone/findSpecsByPhoneId/'+this.phones[index].id).then(function (resp) {
           _this.goods = resp.data.data.goods
           _this.sku = resp.data.data.sku
@@ -103,6 +118,27 @@
         this.$store.state.specsId = item.selectedSkuComb.s1
         this.$store.state.quantity = item.selectedNum
         this.$router.push('/addressList')
+      },
+      logout(){
+        const _this = this
+        axios.get('http://localhost:8181/user/logout').then(function (resp) {
+          if (resp.data.code == 0) {
+            _this.$message({
+              message: '退出成功',
+              type: 'success'
+            })
+            let instance = Toast('退出成功');
+            setTimeout(() => {
+              instance.close();
+              delCookie('username');
+              _this.$router.push('/login');
+            }, 1000)
+          }else {
+            let instance = Toast('退出失败');
+            return false;
+          }
+        })
+
       }
     }
   }

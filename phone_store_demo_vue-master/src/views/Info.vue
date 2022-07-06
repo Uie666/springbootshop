@@ -70,6 +70,7 @@
         GoodsActionIcon,
         GoodsActionButton
     } from 'vant';
+    import {getCookie} from "@/plugins/cookie";
     export default {
         components: {
             [Tag.name]: Tag,
@@ -85,9 +86,15 @@
         },
         created(){
             const _this = this
+          var username=getCookie('username');
+          if(username==''||username=='undefind'){
+            this.$router.push({
+              path: '/login'
+            });
+          }else{
             axios.get('http://localhost:8181/order/detail/'+this.$route.query.orderId).then(function (resp) {
                 _this.data = resp.data.data
-            })
+            })}
         },
         data() {
             return {

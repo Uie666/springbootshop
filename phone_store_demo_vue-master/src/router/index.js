@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import Login from "@/views/Login";
 import Home from '../views/Home.vue'
 import AddressList from '../views/AddressList'
 import AddressNew from '../views/AddressNew'
@@ -7,12 +8,28 @@ import AddressEdit from '../views/AddressEdit'
 import Detail from '../views/Detail'
 import Success from '../views/Success'
 import Info from '../views/Info'
-
+import Register from "@/views/Register";
 Vue.use(VueRouter)
 
   const routes = [
   {
-    path: '/',
+      path: '/',
+      redirect:'/login',
+      name: '登入',
+      component: Login
+  },
+  {
+      path: '/login',
+      name: '登入',
+      component: Login
+  },
+  {
+      path: '/register',
+      name: '注册',
+      component: Register
+  },
+  {
+    path: '/home',
     name: 'Home',
     component: Home
   },
